@@ -1,8 +1,41 @@
 <?php
+/**
+ * Shopware 4.0
+ * Copyright © 2012 shopware AG
+ *
+ * According to our dual licensing model, this program can be used either
+ * under the terms of the GNU Affero General Public License, version 3,
+ * or under a proprietary license.
+ *
+ * The texts of the GNU Affero General Public License with an additional
+ * permission and of our proprietary license can be found at and
+ * in the LICENSE file you have received along with this program.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * "Shopware" is a registered trademark of shopware AG.
+ * The licensing of the program under the AGPLv3 does not imply a
+ * trademark license. Therefore any rights, title and interest in
+ * our trademarks remain entirely with us.
+ */
 
+/**
+ * Shopware SwagHidePrices Plugin - Bootstrap
+ *
+ * @category  Shopware
+ * @package   Shopware\Plugins\SwagHidePrices
+ * @copyright Copyright (c) 2012, shopware AG (http://www.shopware.de)
+ */
 class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Components_Plugin_Bootstrap
 {
-
+    /**
+   	 * Install routine
+   	 *
+   	 * @return bool
+   	 */
 	public function install()
 	{
         $this->subscribeEvent('Enlight_Controller_Action_PostDispatch', 'onPostDispatch');
@@ -14,16 +47,55 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
 		return true;
 	}
 
+    /**
+   	 * Returns the well-formatted name of the plugin
+   	 * as a sting
+   	 *
+   	 * @return string
+   	 */
     public function getLabel()
     {
         return 'Keine Preise ohne Login';
     }
 
+    /**
+   	 * Returns the meta information about the plugin
+   	 * as an array.
+   	 * Keep in mind that the plugin description located
+   	 * in the info.txt.
+   	 *
+   	 * @return array
+   	 */
 	public function getInfo()
 	{
-		return include($this->Path().'Meta.php');
+		return array(
+            'version' => $this->getVersion(),
+            'label' => $this->getLabel(),
+            'description' => file_get_contents($this->Path() . 'info.txt'),
+            'link' => 'http://www.shopware.de/',
+            'changes' => array(
+                '1.0.0'=>array('releasedate'=>'2011-09-16', 'lines' => array(
+                    'First release'
+                )),
+                '1.0.2'=>array('releasedate'=>'2012-10-15', 'lines' => array(
+                    'Updated for Shopware 4.0'
+                )),
+                '1.0.3'=>array('releasedate'=>'2012-11-08', 'lines' => array(
+                    'Fixed a model bug, so you can install the plugin'
+                )),
+                '1.0.4'=>array('releasedate'=>'2012-12-03', 'lines' => array(
+                    'Make sure that smarty_modifier_currency is available'
+                ))
+            ),
+            'revision' => '4'
+        );
 	}
 
+    /**
+   	 * Returns the version of the plugin as a string
+   	 *
+   	 * @return string
+   	 */
 	public function getVersion()
 	{
 		return "1.0.4";
@@ -31,6 +103,11 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
 
 	protected static $showPrices = true;
 
+    /**
+     * Sets $showPrice depending on customer group and current plugin settings,
+     * extends template and loads smarty_modifier_currency plugin
+     * @param Enlight_Event_EventArgs $args
+     */
     public function onPostDispatch(Enlight_Event_EventArgs $args)
     {
         $request = $args->getSubject()->Request();
@@ -71,6 +148,14 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $view->extendsTemplate('frontend/plugins/swag_hide_prices/index.tpl');
     }
 
+    /**
+     * Modify currency callback function
+     * Returns price or empty string depending on the showPrice setting
+     * @param      $value
+     * @param null $config
+     * @param null $position
+     * @return float|string
+     */
     public function modifierCurrency($value, $config = null, $position = null)
     {
         if (!self::$showPrices) {
