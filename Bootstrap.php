@@ -32,43 +32,52 @@
 class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Components_Plugin_Bootstrap
 {
     /**
-   	 * Install routine
-   	 *
-   	 * @return bool
-   	 */
-	public function install()
-	{
+     * Install routine
+     *
+     * @return bool
+     */
+    public function install()
+    {
         $this->subscribeEvent('Enlight_Controller_Action_PostDispatch', 'onPostDispatch');
 
         $form = $this->Form();
-        $form->setElement('text', 'show_group', array('label' => 'Preisanzeige nur für Kundengruppe (Semikolon getrennt)', 'value' => 'EK', 'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP));
-        $form->setElement('select', 'show_prices', array('label' => 'Preise anzeigen', 'value' => 1, 'store' => array(array(1, 'Ja'), array(0, 'Nein'), array(2, 'Nur für Registrierte')), 'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP));
+        $form->setElement('text', 'show_group', array(
+            'label' => 'Preisanzeige nur für Kundengruppe (Semikolon getrennt)',
+            'value' => 'EK',
+            'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP
+        ));
+        $form->setElement('select', 'show_prices', array(
+            'label' => 'Preise anzeigen',
+            'value' => 1,
+            'store' => array(array(1, 'Ja'), array(0, 'Nein'), array(2, 'Nur für Registrierte')),
+            'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP
+        ));
 
-		return true;
-	}
+        return true;
+    }
 
     /**
-   	 * Returns the well-formatted name of the plugin
-   	 * as a sting
-   	 *
-   	 * @return string
-   	 */
+     * Returns the well-formatted name of the plugin
+     * as a sting
+     *
+     * @return string
+     */
     public function getLabel()
     {
         return 'Keine Preise ohne Login';
     }
 
     /**
-   	 * Returns the meta information about the plugin
-   	 * as an array.
-   	 * Keep in mind that the plugin description located
-   	 * in the info.txt.
-   	 *
-   	 * @return array
-   	 */
-	public function getInfo()
-	{
-		return array(
+     * Returns the meta information about the plugin
+     * as an array.
+     * Keep in mind that the plugin description located
+     * in the info.txt.
+     *
+     * @return array
+     */
+    public function getInfo()
+    {
+        return array(
             'version' => $this->getVersion(),
             'label' => $this->getLabel(),
             'description' => file_get_contents($this->Path() . 'info.txt'),
@@ -85,23 +94,25 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
                 )),
                 '1.0.4'=>array('releasedate'=>'2012-12-03', 'lines' => array(
                     'Make sure that smarty_modifier_currency is available'
+                )),
+                '1.0.5'=>array('releasedate'=>'2012-12-03', 'lines' => array(
+                    'Add support for http cache'
                 ))
-            ),
-            'revision' => '4'
+            )
         );
-	}
+    }
 
     /**
-   	 * Returns the version of the plugin as a string
-   	 *
-   	 * @return string
-   	 */
-	public function getVersion()
-	{
-		return "1.0.4";
-	}
+     * Returns the version of the plugin as a string
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return "1.0.5";
+    }
 
-	protected static $showPrices = true;
+    protected static $showPrices = true;
 
     /**
      * Sets $showPrice depending on customer group and current plugin settings,
@@ -115,7 +126,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $view = $args->getSubject()->View();
 
         if (!$request->isDispatched() || $response->isException() || !$view->hasTemplate()
-           || $request->getModuleName() != 'frontend' || $request->getControllerName() == "account") {
+            || $request->getModuleName() != 'frontend') {
             return;
         }
 
@@ -123,27 +134,33 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $userLoggedIn = (bool)Shopware()->Session()->sUserId;
         $userCustomerGroup = Shopware()->System()->sUSERGROUP;
         $customerGroup = explode(";", $config->show_group);
-        $showPrices = !empty($config->show_prices) && ($config->show_prices == 1 || $userLoggedIn) || in_array($userCustomerGroup, $customerGroup);
-        self::$showPrices = $showPrices;
+        $configShowPrices = $config->show_prices;
 
+        if($request->getControllerName() == "account") {
+            $showPrices = true;
+        } elseif(!empty($configShowPrices) && ($configShowPrices == 1 || $userLoggedIn)) {
+            $showPrices = true;
+        } elseif(in_array($userCustomerGroup, $customerGroup)) {
+            $showPrices = true;
+        } else {
+            $showPrices = false;
+        }
+
+        $httpCache = Shopware()->Plugins()->Core()->get('HttpCache');
+        if($httpCache !== null && $configShowPrices == 2 && $userLoggedIn) {
+            $httpCache->setNoCacheTag('price');
+        }
+
+        self::$showPrices = $showPrices;
         $view->ShowPrices = $showPrices;
 
         /** @var $engine Enlight_Template_Manager */
         $engine = $view->Engine();
 
-        $engine->setCompileId($engine->getCompileId() . '_' . $userCustomerGroup);
         $engine->unregisterPlugin('modifier', 'currency');
         $engine->registerPlugin('modifier', 'currency', __CLASS__ . '::modifierCurrency');
         $engine->loadPlugin('smarty_modifier_currency');
-        $view->extendsBlock('frontend_index_header_css_screen', '
-			{if !$ShowPrices}
-				<style type="text/css">
-				.price { display:none !important }
-				.pseudo { display:none !important }
-				.article_details_price2 { display:none !important }
-				.article_details_price { display:none !important }
-				</style>
-			{/if}', 'append');
+
         $view->addTemplateDir($this->Path() . 'Views/');
         $view->extendsTemplate('frontend/plugins/swag_hide_prices/index.tpl');
     }
@@ -156,7 +173,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
      * @param null $position
      * @return float|string
      */
-    public function modifierCurrency($value, $config = null, $position = null)
+    public static function modifierCurrency($value, $config = null, $position = null)
     {
         if (!self::$showPrices) {
             return '';
