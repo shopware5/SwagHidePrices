@@ -3,6 +3,7 @@
         <style type="text/css">
             .price { display:none !important }
             .pseudoprice { display:none !important }
+            .amount { display:none !important }
             .article_details_price { display:none !important }
             .article_details_price2 { display:none !important }
             .smallsize { display:none !important }
