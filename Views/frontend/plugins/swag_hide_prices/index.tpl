@@ -2,10 +2,13 @@
     {if !$ShowPrices}
         <style type="text/css">
             .price { display:none !important }
-            .pseudo { display:none !important }
-            .amount { display:none !important }
-            .article_details_price2 { display:none !important }
+            .pseudoprice { display:none !important }
             .article_details_price { display:none !important }
+            .article_details_price2 { display:none !important }
+            .smallsize { display:none !important }
+            .referenceunit { display: none !important }
+            .abo-price { display:none !important }
+            .bundle-price { display:none !important }
         </style>
     {/if}
 {/block}
