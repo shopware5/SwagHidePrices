@@ -105,7 +105,8 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
     /**
      * Returns the version of the plugin as a string
      *
-     * @return string
+     * @return mixed
+     * @throws Exception
      */
     public function getVersion()
     {
@@ -152,9 +153,12 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
             $showPrices = false;
         }
 
+        /** @var Shopware_Plugins_Core_HttpCache_Bootstrap $httpCache */
         $httpCache = Shopware()->Plugins()->Core()->get('HttpCache');
-        if($httpCache !== null && $configShowPrices == 2 && $userLoggedIn) {
-            $httpCache->setNoCacheTag('price');
+        if($httpCache !== null && $this->checkIfHttpCacheIsActive()) {
+            if ($configShowPrices == 2 && $userLoggedIn) {
+                $httpCache->setNoCacheTag('price');
+            }
         }
 
         self::$showPrices = $showPrices;
@@ -190,5 +194,17 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         }
 
         return smarty_modifier_currency($value, $config, $position);
+    }
+
+    private function checkIfHttpCacheIsActive()
+    {
+        $sql = "SELECT `active` FROM `s_core_plugins` WHERE `name` = 'HttpCache' LIMIT 1";
+        /** @var Enlight_Components_Db_Adapter_Pdo_Mysql $db */
+        $db = $this->get('db');
+        $result = (int)$db->fetchOne($sql);
+        if($result === 1){
+            return true;
+        }
+        return false;
     }
 }
