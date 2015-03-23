@@ -1,9 +1,25 @@
 {
-    "currentVersion": "1.0.5",
+    "label": {
+        "de": "Keine Preise ohne Login",
+        "en": "Hide prices if not logged in"
+    },
 
-    "changelogs": {
-        "1.0.5": "Add support for http cache"
+    "copyright": "(c) by Shopware AG",
+    "license": "proprietary",
+    "link": "http://store.shopware.com",
+    "author": "Shopware AG",
 
+    "currentVersion": "1.0.6",
+
+    "changelog": {
+        "de": {
+            "1.0.6": "PT-2620, PT-2649 - Bugfix: Probleme mit dem Cache behoben;",
+            "1.0.5": "HTTP Cache Support hinzugefügt"
+        },
+        "en": {
+            "1.0.6": "PT-2620, PT-2649 - Bugfix: Problems with caching;",
+            "1.0.5": "Add support for HTTP cache"
+        }
     },
 
     "compatibility": {
