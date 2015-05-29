@@ -1,3 +1,4 @@
+{* EMOTION_TEMPLATE_MODIFICATIONS --- *}
 {block name="frontend_index_header_css_screen" append}
     {if !$ShowPrices}
         <style type="text/css">
@@ -45,3 +46,33 @@
     {/if}
 {/block}
 {* --- PREISFILTER SUCHE ENDE --- *}
+
+
+{* RESPONSIVE_TEMPLATE_MODIFICATIONS --- *}
+
+{* --- detail --- *}
+{block name="frontend_detail_data_price_default"}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {/if}
+{/block}
+
+{block name="frontend_detail_data_tax"}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {/if}
+{/block}
+
+{* --- listing --- *}
+{block name='frontend_listing_box_article_price'}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {/if}
+{/block}
+
+{*
+{block name='frontend_listing_box_article_price_info'}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {/if}
+{/block}*}

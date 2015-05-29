@@ -132,8 +132,12 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $response = $args->getSubject()->Response();
         $view = $args->getSubject()->View();
 
-        if (!$request->isDispatched() || $response->isException() || !$view->hasTemplate()
-            || $request->getModuleName() != 'frontend') {
+        if(
+                !$request->isDispatched() ||
+                $response->isException() ||
+                !$view->hasTemplate() ||
+                ($request->getModuleName() != 'frontend' && $request->getModuleName() != 'widgets')
+        ) {
             return;
         }
 
