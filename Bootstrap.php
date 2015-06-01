@@ -213,6 +213,8 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
 	public function update($version)
 	{
 		$this->createMyEvents();
+
+		return true;
 	}
 
 	private function createMyEvents()
