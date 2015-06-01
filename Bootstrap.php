@@ -38,7 +38,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
      */
     public function install()
     {
-        $this->subscribeEvent('Enlight_Controller_Action_PostDispatch', 'onPostDispatch');
+        $this->createMyEvents();
 
         $form = $this->Form();
         $form->setElement('text', 'show_group', array(
@@ -132,10 +132,12 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $response = $args->getSubject()->Response();
         $view = $args->getSubject()->View();
 
-        if (!$request->isDispatched() || $response->isException() || !$view->hasTemplate()
-            || $request->getModuleName() != 'frontend') {
-            return;
-        }
+	    if(
+			    $request->getModuleName() != 'frontend' &&
+			    $request->getModuleName() != 'widgets'
+	    ) {
+		    return;
+	    }
 
         $config = $this->Config();
         $userLoggedIn = (bool)Shopware()->Session()->sUserId;
@@ -207,4 +209,14 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         }
         return false;
     }
+
+	public function update($version)
+	{
+		$this->createMyEvents();
+	}
+
+	private function createMyEvents()
+	{
+		$this->subscribeEvent('Enlight_Controller_Action_PostDispatchSecure', 'onPostDispatch');
+	}
 }
