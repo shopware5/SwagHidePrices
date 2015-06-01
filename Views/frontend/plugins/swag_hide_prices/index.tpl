@@ -69,10 +69,3 @@
         {$smarty.block.parent}
     {/if}
 {/block}
-
-{*
-{block name='frontend_listing_box_article_price_info'}
-    {if $ShowPrices}
-        {$smarty.block.parent}
-    {/if}
-{/block}*}
