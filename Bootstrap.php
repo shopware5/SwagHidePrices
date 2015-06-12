@@ -173,8 +173,15 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $engine->registerPlugin('modifier', 'currency', __CLASS__ . '::modifierCurrency');
         $engine->loadPlugin('smarty_modifier_currency');
 
-        $view->addTemplateDir($this->Path() . 'Views/');
-        $view->extendsTemplate('frontend/plugins/swag_hide_prices/index.tpl');
+	    $template = Shopware()->Shop()->getTemplate();
+	    if ($template->getVersion() >= 3) {
+		    $view->addTemplateDir($this->Path() . 'Views/responsive/');
+	    } else {
+		    $view->addTemplateDir($this->Path() . 'Views/');
+		    $view->extendsTemplate('frontend/plugins/swag_hide_prices/index.tpl');
+	    }
+
+
     }
 
     /**
