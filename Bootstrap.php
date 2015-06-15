@@ -41,15 +41,17 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $this->createMyEvents();
 
         $form = $this->Form();
+
+	    $form->setElement('select', 'show_prices', array(
+			    'label' => 'Preise anzeigen',
+			    'value' => 1,
+			    'store' => array(array(1, 'Ja'), array(0, 'Nein'), array(2, 'Nur für Registrierte')),
+			    'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP
+	    ));
+
         $form->setElement('text', 'show_group', array(
             'label' => 'Preisanzeige nur für Kundengruppe (Semikolon getrennt)',
             'value' => 'EK',
-            'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP
-        ));
-        $form->setElement('select', 'show_prices', array(
-            'label' => 'Preise anzeigen',
-            'value' => 1,
-            'store' => array(array(1, 'Ja'), array(0, 'Nein'), array(2, 'Nur für Registrierte')),
             'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP
         ));
 
@@ -142,18 +144,24 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $config = $this->Config();
         $userLoggedIn = (bool)Shopware()->Session()->sUserId;
         $userCustomerGroup = Shopware()->System()->sUSERGROUP;
-        $customerGroup = explode(";", $config->show_group);
+        $validCustomerGroups = explode(";", $config->show_group);
         $configShowPrices = $config->show_prices;
 
-        if($request->getControllerName() == "account") {
-            $showPrices = true;
-        } elseif(!empty($configShowPrices) && ($configShowPrices == 1 || $userLoggedIn)) {
-            $showPrices = true;
-        } elseif(in_array($userCustomerGroup, $customerGroup)) {
-            $showPrices = true;
-        } else {
-            $showPrices = false;
-        }
+	    $showPrices = false;
+
+	    if($configShowPrices == 0) { // 0 -> hide prices
+		    $showPrices = false;
+	    }
+
+	    if($configShowPrices == 1 || $userLoggedIn) { // 1 -> show prices
+		    $showPrices = true;
+	    }
+
+	    if($configShowPrices == 2) { // 2 -> show prices only for valid customer groups
+		    if(in_array($userCustomerGroup, $validCustomerGroups)) {
+			    $showPrices = true;
+		    }
+	    }
 
         /** @var Shopware_Plugins_Core_HttpCache_Bootstrap $httpCache */
         $httpCache = Shopware()->Plugins()->Core()->get('HttpCache');
