@@ -153,12 +153,12 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
 		    $showPrices = false;
 	    }
 
-	    if($configShowPrices == 1 || $userLoggedIn) { // 1 -> show prices
+	    if($configShowPrices == 1 ) { // 1 -> show prices
 		    $showPrices = true;
 	    }
 
-	    if($configShowPrices == 2) { // 2 -> show prices only for valid customer groups
-		    if(in_array($userCustomerGroup, $validCustomerGroups)) {
+	    if($configShowPrices == 2) { // 2 -> show prices only for valid logged-in customer groups
+		    if($userLoggedIn && in_array($userCustomerGroup, $validCustomerGroups)) {
 			    $showPrices = true;
 		    }
 	    }
