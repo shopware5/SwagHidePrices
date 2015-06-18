@@ -260,10 +260,10 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
                 'store' => array(
                     array(1, 'Ja'),
                     array(0, 'Nein'),
-                    array(2, 'Nur für eingeloggte Kunden, die folgender Kundengruppe angehören')
+                    array(2, 'Nur für Kundengruppen, die im unteren Feld defniert werden')
                 ),
                 'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP,
-                'description' => 'Diese Option wirkt global: <br><i>Ja</i> - Preise immer anzeigen (unabhängig von Kundengruppen)<br><i>Nein</i> - Preise immer verbergen (unabhängig von Kundengruppen)<br><i>Nur für eingeloggte Kunden</i> - Preise werden angezeigt oder verborgen abhängig von den genannten Kundengruppen.',
+                'description' => 'Diese Option wirkt global: <br><i>Ja</i> - Preise immer anzeigen (unabhängig von Kundengruppen)<br><i>Nein</i> - Preise immer verbergen (unabhängig von Kundengruppen)<br><i>Nur für Kundengruppen, die im unteren Feld defniert werden</i> - Preise werden angezeigt oder verborgen abhängig von den genannten Kundengruppen.',
 
             )
         );
@@ -275,7 +275,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
                 'label' => 'Preisanzeige nur für Kundengruppe (Semikolon getrennt)',
                 'value' => 'EK',
                 'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP,
-                'description' => 'Geben Sie hier die Kundengruppen an, für die Preise angezeigt werden sollen. Mehrere Kundengruppen werden durch ein Semikolon getrennt. Diese Einstellung wirkt nur dann, wenn im oberen Feld <i>Nur für eingeloggte Kunden</i> ausgewählt ist.'
+                'description' => 'Geben Sie hier die Kundengruppen an, für die Preise angezeigt werden sollen. Mehrere Kundengruppen werden durch ein Semikolon getrennt. Diese Einstellung wirkt nur dann, wenn im oberen Feld <i>Nur für Kundengruppen, die im unteren Feld defniert werden</i> ausgewählt ist.'
             )
         );
 
@@ -284,16 +284,16 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
                 'en_GB' => array(
                     'show_prices' => array(
                         'label' => 'Show Prices',
-                        'description' => 'This Option has global effect: <br><i>Yes</i> - Always show prices (independent of customer groups)<br><i>No</i> - Always hide prices (independent of customer groups)<br><i>Only logged-in customers</i> - Prices get shown or hidden depending on specified customer groups.',
+                        'description' => 'This Option has global effect: <br><i>Yes</i> - Always show prices (independent of customer groups)<br><i>No</i> - Always hide prices (independent of customer groups)<br><i>Only for customer group defined in the lower field</i> - Prices get shown or hidden depending on specified customer groups.',
                         'store' => array(
                             array(1, 'Yes'),
                             array(0, 'No'),
-                            array(2, 'Only logged-in customers, which belong to the following customer group')
+                            array(2, 'Only for customer group defined in the lower field')
                         )
                     ),
                     'show_group' => array(
                         'label' => 'Show Prices only for customer groups',
-                        'description' => 'Enter customer groups that are allowed to see prices. Multiple customer groups must be separated by semicolon. This option only has an effect if <i>Only logged-in customers</i> is selected in the upper field.'
+                        'description' => 'Enter customer groups that are allowed to see prices. Multiple customer groups must be separated by semicolon. This option only has an effect if <i>Only for customer group defined in the lower field</i> is selected in the upper field.'
                     )
                 )
             )
