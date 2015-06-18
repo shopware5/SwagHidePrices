@@ -9,14 +9,16 @@
     "link": "http://store.shopware.com",
     "author": "Shopware AG",
 
-    "currentVersion": "1.0.6",
+    "currentVersion": "1.1.0",
 
     "changelog": {
         "de": {
+            "1.1.0": "PT-2950 - Feature: Shopware 5 Kompatibilität;",
             "1.0.6": "PT-2620, PT-2649 - Bugfix: Probleme mit dem Cache behoben;",
             "1.0.5": "HTTP Cache Support hinzugefügt"
         },
         "en": {
+            "1.1.0": "PT-2950 - Feature: Shopware 5 compatibility;",
             "1.0.6": "PT-2620, PT-2649 - Bugfix: Problems with caching;",
             "1.0.5": "Add support for HTTP cache"
         }

@@ -1,6 +1,0 @@
-​Mit diesem Plugin können im Shop alle Preise ausgeblendet werden. Optional können diese aber auch auf Kundengruppen beschränkt werden. Somit ist es möglich, dass z.B. nur freigeschaltete Händler die Preise im Shop einsehen können. Auch die Bestellfunktion wird automatisch deaktiviert, wenn die Preise ausgeblendet sind.
-Weitere Highlights:
-
-- Preise global ausgeblenden (für jede einzelne Kundengruppe definierbar)
-- Preise/Bestellfunktion nur nach Anmeldung sichtbar
-- komplett subshopfähig

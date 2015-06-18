@@ -40,49 +40,29 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
     {
         $this->createMyEvents();
 
-        $form = $this->Form();
-
-	    $form->setElement('select', 'show_prices', array(
-			    'label' => 'Preise anzeigen',
-			    'value' => 1,
-			    'store' => array(
-					    array(1, 'Ja'),
-					    array(0, 'Nein'),
-					    array(2, 'Nur für eingeloggte Kunden, die folgender Kundengruppe angehören')
-			    ),
-			    'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP,
-			    'description' => 'Diese Option wirkt global: <br><i>Ja</i> - Preise immer anzeigen (unabhängig von Kundengruppen)<br><i>Nein</i> - Preise immer verbergen (unabhängig von Kundengruppen)<br><i>Nur für eingeloggte Kunden</i> - Preise werden angezeigt oder verborgen abhängig von den genannten Kundengruppen.',
-
-	    ));
-
-        $form->setElement('text', 'show_group', array(
-            'label' => 'Preisanzeige nur für Kundengruppe (Semikolon getrennt)',
-            'value' => 'EK',
-            'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP,
-		        'description' => 'Geben Sie hier die Kundengruppen an, für die Preise angezeigt werden sollen. Mehrere Kundengruppen werden durch ein Semikolon getrennt. Diese Einstellung wirkt nur dann, wenn im oberen Feld <i>Nur für eingeloggte Kunden</i> ausgewählt ist.'
-        ));
-
-	    $this->addFormTranslations(
-			    array(
-					    'en_GB' => array(
-							    'show_prices' => array(
-									    'label'       => 'Show Prices',
-									    'description' => 'This Option has global effect: <br><i>Yes</i> - Always show prices (independent of customer groups)<br><i>No</i> - Always hide prices (independent of customer groups)<br><i>Only logged-in customers</i> - Prices get shown or hidden depending on specified customer groups.',
-									    'store' => array(
-											    array(1, 'Yes'),
-											    array(0, 'No'),
-											    array(2, 'Only logged-in customers, which belong to the following customer group')
-									    )
-							    ),
-							    'show_group'  => array(
-									    'label'       => 'Show Prices only for customer groups',
-									    'description' => 'Enter customer groups that are allowed to see prices. Multiple customer groups must be separated by semicolon. This option only has an effect if <i>Only logged-in customers</i> is selected in the upper field.'
-							    )
-					    )
-			    )
-	    );
+        $this->createMyForm();
 
         return true;
+    }
+
+    /**
+     * Standard plugin enable method
+     *
+     * @return array
+     */
+    public function enable()
+    {
+        return array('success' => true, 'invalidateCache' => array('frontend'));
+    }
+
+    /**
+     * Standard plugin disable method
+     *
+     * @return array
+     */
+    public function disable()
+    {
+        return array('success' => true, 'invalidateCache' => array('frontend'));
     }
 
     /**
@@ -109,25 +89,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         return array(
             'version' => $this->getVersion(),
             'label' => $this->getLabel(),
-            'description' => file_get_contents($this->Path() . 'info.txt'),
-            'link' => 'http://www.shopware.de/',
-            'changes' => array(
-                '1.0.0'=>array('releasedate'=>'2011-09-16', 'lines' => array(
-                    'First release'
-                )),
-                '1.0.2'=>array('releasedate'=>'2012-10-15', 'lines' => array(
-                    'Updated for Shopware 4.0'
-                )),
-                '1.0.3'=>array('releasedate'=>'2012-11-08', 'lines' => array(
-                    'Fixed a model bug, so you can install the plugin'
-                )),
-                '1.0.4'=>array('releasedate'=>'2012-12-03', 'lines' => array(
-                    'Make sure that smarty_modifier_currency is available'
-                )),
-                '1.0.5'=>array('releasedate'=>'2012-12-03', 'lines' => array(
-                    'Add support for http cache'
-                ))
-            )
+            'link' => 'http://www.shopware.de/'
         );
     }
 
@@ -139,7 +101,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
      */
     public function getVersion()
     {
-        $info = json_decode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR .'plugin.json'), true);
+        $info = json_decode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'plugin.json'), true);
 
         if ($info) {
             return $info['currentVersion'];
@@ -153,46 +115,45 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
     /**
      * Sets $showPrice depending on customer group and current plugin settings,
      * extends template and loads smarty_modifier_currency plugin
+     *
      * @param Enlight_Event_EventArgs $args
      */
     public function onPostDispatch(Enlight_Event_EventArgs $args)
     {
-        $request = $args->getSubject()->Request();
-        $response = $args->getSubject()->Response();
-        $view = $args->getSubject()->View();
+        /** @var Enlight_Controller_Action $subject */
+        $subject = $args->getSubject();
 
-	    if(
-			    $request->getModuleName() != 'frontend' &&
-			    $request->getModuleName() != 'widgets'
-	    ) {
-		    return;
-	    }
+        /** @var Enlight_Controller_Request_RequestHttp $request */
+        $request = $subject->Request();
+
+        /** @var Enlight_View_Default $view */
+        $view = $subject->View();
 
         $config = $this->Config();
-        $userLoggedIn = (bool)Shopware()->Session()->sUserId;
+        $userLoggedIn = (bool) Shopware()->Session()->sUserId;
         $userCustomerGroup = Shopware()->System()->sUSERGROUP;
         $validCustomerGroups = explode(";", $config->show_group);
         $configShowPrices = $config->show_prices;
 
-	    $showPrices = false;
+        $showPrices = false;
 
-	    if($configShowPrices == 0) { // 0 -> hide prices
-		    $showPrices = false;
-	    }
+        if ($configShowPrices == 0) { // 0 -> hide prices
+            $showPrices = false;
+        }
 
-	    if($configShowPrices == 1 ) { // 1 -> show prices
-		    $showPrices = true;
-	    }
+        if ($configShowPrices == 1) { // 1 -> show prices
+            $showPrices = true;
+        }
 
-	    if($configShowPrices == 2) { // 2 -> show prices only for valid logged-in customer groups
-		    if($userLoggedIn && in_array($userCustomerGroup, $validCustomerGroups)) {
-			    $showPrices = true;
-		    }
-	    }
+        if ($configShowPrices == 2) { // 2 -> show prices only for valid logged-in customer groups
+            if ($userLoggedIn && in_array($userCustomerGroup, $validCustomerGroups)) {
+                $showPrices = true;
+            }
+        }
 
         /** @var Shopware_Plugins_Core_HttpCache_Bootstrap $httpCache */
         $httpCache = Shopware()->Plugins()->Core()->get('HttpCache');
-        if($httpCache !== null && $this->checkIfHttpCacheIsActive()) {
+        if ($httpCache !== null && $this->checkIfHttpCacheIsActive()) {
             if ($configShowPrices == 2 && $userLoggedIn) {
                 $httpCache->setNoCacheTag('price');
             }
@@ -208,13 +169,13 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $engine->registerPlugin('modifier', 'currency', __CLASS__ . '::modifierCurrency');
         $engine->loadPlugin('smarty_modifier_currency');
 
-	    $template = Shopware()->Shop()->getTemplate();
-	    if ($template->getVersion() >= 3) {
-		    $view->addTemplateDir($this->Path() . 'Views/responsive/');
-	    } else {
-		    $view->addTemplateDir($this->Path() . 'Views/');
-		    $view->extendsTemplate('frontend/plugins/swag_hide_prices/index.tpl');
-	    }
+        $template = Shopware()->Shop()->getTemplate();
+        if ($template->getVersion() >= 3) {
+            $view->addTemplateDir($this->Path() . 'Views/responsive/');
+        } else {
+            $view->addTemplateDir($this->Path() . 'Views/');
+            $view->extendsTemplate('frontend/plugins/swag_hide_prices/index.tpl');
+        }
 
 
     }
@@ -222,6 +183,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
     /**
      * Modify currency callback function
      * Returns price or empty string depending on the showPrice setting
+     *
      * @param      $value
      * @param null $config
      * @param null $position
@@ -240,27 +202,97 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         return smarty_modifier_currency($value, $config, $position);
     }
 
+    /**
+     * @return bool
+     */
     private function checkIfHttpCacheIsActive()
     {
         $sql = "SELECT `active` FROM `s_core_plugins` WHERE `name` = 'HttpCache' LIMIT 1";
         /** @var Enlight_Components_Db_Adapter_Pdo_Mysql $db */
         $db = $this->get('db');
-        $result = (int)$db->fetchOne($sql);
-        if($result === 1){
+        $result = (int) $db->fetchOne($sql);
+        if ($result === 1) {
             return true;
         }
+
         return false;
     }
 
-	public function update($version)
-	{
-		$this->createMyEvents();
+    /**
+     * @param string $version
+     * @return bool
+     */
+    public function update($version)
+    {
+        $this->createMyEvents();
 
-		return true;
-	}
+        $this->createMyForm();
 
-	private function createMyEvents()
-	{
-		$this->subscribeEvent('Enlight_Controller_Action_PostDispatchSecure', 'onPostDispatch');
-	}
+        return true;
+    }
+
+    /**
+     * subscribes events
+     */
+    private function createMyEvents()
+    {
+        $this->subscribeEvent('Enlight_Controller_Action_PostDispatchSecure_Frontend', 'onPostDispatch');
+        $this->subscribeEvent('Enlight_Controller_Action_PostDispatchSecure_Widgets', 'onPostDispatch');
+    }
+
+    /**
+     * creates plugin config form
+     */
+    private function createMyForm()
+    {
+        $form = $this->Form();
+
+        $form->setElement(
+            'select',
+            'show_prices',
+            array(
+                'label' => 'Preise anzeigen',
+                'value' => 1,
+                'store' => array(
+                    array(1, 'Ja'),
+                    array(0, 'Nein'),
+                    array(2, 'Nur für eingeloggte Kunden, die folgender Kundengruppe angehören')
+                ),
+                'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP,
+                'description' => 'Diese Option wirkt global: <br><i>Ja</i> - Preise immer anzeigen (unabhängig von Kundengruppen)<br><i>Nein</i> - Preise immer verbergen (unabhängig von Kundengruppen)<br><i>Nur für eingeloggte Kunden</i> - Preise werden angezeigt oder verborgen abhängig von den genannten Kundengruppen.',
+
+            )
+        );
+
+        $form->setElement(
+            'text',
+            'show_group',
+            array(
+                'label' => 'Preisanzeige nur für Kundengruppe (Semikolon getrennt)',
+                'value' => 'EK',
+                'scope' => \Shopware\Models\Config\Element::SCOPE_SHOP,
+                'description' => 'Geben Sie hier die Kundengruppen an, für die Preise angezeigt werden sollen. Mehrere Kundengruppen werden durch ein Semikolon getrennt. Diese Einstellung wirkt nur dann, wenn im oberen Feld <i>Nur für eingeloggte Kunden</i> ausgewählt ist.'
+            )
+        );
+
+        $this->addFormTranslations(
+            array(
+                'en_GB' => array(
+                    'show_prices' => array(
+                        'label' => 'Show Prices',
+                        'description' => 'This Option has global effect: <br><i>Yes</i> - Always show prices (independent of customer groups)<br><i>No</i> - Always hide prices (independent of customer groups)<br><i>Only logged-in customers</i> - Prices get shown or hidden depending on specified customer groups.',
+                        'store' => array(
+                            array(1, 'Yes'),
+                            array(0, 'No'),
+                            array(2, 'Only logged-in customers, which belong to the following customer group')
+                        )
+                    ),
+                    'show_group' => array(
+                        'label' => 'Show Prices only for customer groups',
+                        'description' => 'Enter customer groups that are allowed to see prices. Multiple customer groups must be separated by semicolon. This option only has an effect if <i>Only logged-in customers</i> is selected in the upper field.'
+                    )
+                )
+            )
+        );
+    }
 }
