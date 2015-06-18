@@ -129,6 +129,10 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         /** @var Enlight_View_Default $view */
         $view = $subject->View();
 
+        if ($request->getModuleName() != 'frontend' && $request->getModuleName() != 'widgets') {
+            return;
+        }
+
         $config = $this->Config();
         $userLoggedIn = (bool) Shopware()->Session()->sUserId;
         $userCustomerGroup = Shopware()->System()->sUSERGROUP;
