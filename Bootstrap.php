@@ -1,25 +1,23 @@
 <?php
 /**
- * Shopware 4.0
- * Copyright © 2012 shopware AG
+ * Shopware Plugins
+ * Copyright (c) shopware AG
  *
- * According to our dual licensing model, this program can be used either
- * under the terms of the GNU Affero General Public License, version 3,
- * or under a proprietary license.
+ * According to our dual licensing model, this plugin can be used under
+ * a proprietary license as set forth in our Terms and Conditions,
+ * section 2.1.2.2 (Conditions of Usage).
  *
- * The texts of the GNU Affero General Public License with an additional
- * permission and of our proprietary license can be found at and
- * in the LICENSE file you have received along with this program.
+ * The text of our proprietary license additionally can be found at and
+ * in the LICENSE file you have received along with this plugin.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
+ * This plugin is distributed in the hope that it will be useful,
+ * with LIMITED WARRANTY AND LIABILITY as set forth in our
+ * Terms and Conditions, sections 9 (Warranty) and 10 (Liability).
  *
  * "Shopware" is a registered trademark of shopware AG.
- * The licensing of the program under the AGPLv3 does not imply a
- * trademark license. Therefore any rights, title and interest in
- * our trademarks remain entirely with us.
+ * The licensing of the plugin does not imply a trademark license.
+ * Therefore any rights, title and interest in our trademarks
+ * remain entirely with us.
  */
 
 /**
@@ -27,10 +25,12 @@
  *
  * @category  Shopware
  * @package   Shopware\Plugins\SwagHidePrices
- * @copyright Copyright (c) 2012, shopware AG (http://www.shopware.de)
+ * @copyright Copyright (c) 2016, shopware AG (http://de.shopware.com)
  */
 class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Components_Plugin_Bootstrap
 {
+    protected static $showPrices = true;
+
     /**
      * Install routine
      *
@@ -38,6 +38,10 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
      */
     public function install()
     {
+        if (!$this->assertMinimumVersion('5.2.0')) {
+            throw new \RuntimeException('At least Shopware 5.2.0 is required');
+        }
+
         $this->createMyEvents();
 
         $this->createMyForm();
@@ -89,7 +93,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         return array(
             'version' => $this->getVersion(),
             'label' => $this->getLabel(),
-            'link' => 'http://www.shopware.de/'
+            'link' => 'http://de.shopware.com/'
         );
     }
 
@@ -109,8 +113,6 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
             throw new Exception('The plugin has an invalid version file.');
         }
     }
-
-    protected static $showPrices = true;
 
     /**
      * Sets $showPrice depending on customer group and current plugin settings,
@@ -173,15 +175,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $engine->registerPlugin('modifier', 'currency', __CLASS__ . '::modifierCurrency');
         $engine->loadPlugin('smarty_modifier_currency');
 
-        $template = Shopware()->Shop()->getTemplate();
-        if ($template->getVersion() >= 3) {
-            $view->addTemplateDir($this->Path() . 'Views/responsive/');
-        } else {
-            $view->addTemplateDir($this->Path() . 'Views/');
-            $view->extendsTemplate('frontend/plugins/swag_hide_prices/index.tpl');
-        }
-
-
+        $view->addTemplateDir($this->Path() . 'Views/');
     }
 
     /**
@@ -228,6 +222,10 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
      */
     public function update($version)
     {
+        if (!$this->assertMinimumVersion('5.2.0')) {
+            throw new \RuntimeException('At least Shopware 5.2.0 is required');
+        }
+
         $this->createMyEvents();
 
         $this->createMyForm();
