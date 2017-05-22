@@ -11,3 +11,11 @@
         {$smarty.block.parent}
     {/if}
 {/block}
+
+{block name="frontend_listing_box_article_buy"}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {elseif !$ShowPrices && {config name="displayListingBuyButton"}}
+        {include file="frontend/listing/product-box/button-detail.tpl"}
+    {/if}
+{/block}
