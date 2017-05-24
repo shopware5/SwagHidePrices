@@ -176,37 +176,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         self::$showPrices = $showPrices;
         $view->assign('ShowPrices', $showPrices);
 
-        /** @var $engine Enlight_Template_Manager */
-        $engine = $view->Engine();
-
-        $engine->unregisterPlugin('modifier', 'currency');
-        $engine->registerPlugin('modifier', 'currency', __CLASS__ . '::modifierCurrency');
-        $engine->loadPlugin('smarty_modifier_currency');
-
         $view->addTemplateDir($this->Path() . 'Views/');
-    }
-
-    /**
-     * Modify currency callback function
-     * Returns price or empty string depending on the showPrice setting
-     *
-     * @param      $value
-     * @param null $config
-     * @param null $position
-     *
-     * @return float|string
-     */
-    public static function modifierCurrency($value, $config = null, $position = null)
-    {
-        if (!self::$showPrices) {
-            return '';
-        }
-
-        if (!function_exists('smarty_modifier_currency')) {
-            return number_format($value, 2, ',', '');
-        }
-
-        return smarty_modifier_currency($value, $config, $position);
     }
 
     /**
