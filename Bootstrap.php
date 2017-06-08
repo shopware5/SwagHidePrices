@@ -199,6 +199,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
     {
         $this->subscribeEvent('Enlight_Controller_Action_PostDispatchSecure_Frontend', 'onPostDispatch');
         $this->subscribeEvent('Enlight_Controller_Action_PostDispatchSecure_Widgets', 'onPostDispatch');
+        $this->subscribeEvent('Enlight_Controller_Action_PreDispatch_Widgets_Listing', 'onPostDispatch');
     }
 
     /**
