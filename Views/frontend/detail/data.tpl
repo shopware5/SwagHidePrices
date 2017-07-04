@@ -17,3 +17,9 @@
         {$smarty.block.parent}
     {/if}
 {/block}
+
+{block name="frontend_detail_liveshopping_data"}
+    {if $ShowPrices || !$liveShopping}
+        {$smarty.block.parent}
+    {/if}
+{/block}
