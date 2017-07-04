@@ -23,3 +23,9 @@
         {$smarty.block.parent}
     {/if}
 {/block}
+
+{block name="frontend_detail_data_block_price_include"}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {/if}
+{/block}
