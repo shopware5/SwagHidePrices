@@ -20,6 +20,9 @@
  * remain entirely with us.
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Shopware\Components\Theme\LessDefinition;
+
 /**
  * Shopware SwagHidePrices Plugin
  *
@@ -180,6 +183,21 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function onCollectLessFiles()
+    {
+        return new Doctrine\Common\Collections\ArrayCollection([
+            new LessDefinition(
+                [],
+                [__DIR__ . '/Views/frontend/_public/src/less/all.less'],
+                __DIR__
+            ),
+        ]);
+
+    }
+
+    /**
      * @return bool
      */
     private function checkIfHttpCacheIsActive()
@@ -200,6 +218,7 @@ class Shopware_Plugins_Frontend_SwagHidePrices_Bootstrap extends Shopware_Compon
         $this->subscribeEvent('Enlight_Controller_Action_PostDispatchSecure_Frontend', 'onPostDispatch');
         $this->subscribeEvent('Enlight_Controller_Action_PostDispatchSecure_Widgets', 'onPostDispatch');
         $this->subscribeEvent('Enlight_Controller_Action_PreDispatch_Widgets_Listing', 'onPostDispatch');
+        $this->subscribeEvent('Theme_Compiler_Collect_Plugin_Less', 'onCollectLessFiles');
     }
 
     /**
