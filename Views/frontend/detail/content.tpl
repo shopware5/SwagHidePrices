@@ -27,7 +27,13 @@
     {/if}
 {/block}
 
-{block name='frontend_detail_buy_button'}
+{block name='widgets_swag_emotion_advanced_buy_button'}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {/if}
+{/block}
+
+{block name="frontend_detail_data_block_price_include"}
     {if $ShowPrices}
         {$smarty.block.parent}
     {/if}
