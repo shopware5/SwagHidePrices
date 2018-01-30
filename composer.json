@@ -1,0 +1,9 @@
+{
+    "name": "shopware/swag-hide-prices",
+    "type": "shopware-plugin",
+    "description": "Plugin that hides the prices if the user is not logged in.",
+    "license": "proprietary",
+    "extra": {
+        "installer-name": "SwagHidePrices"
+    }
+}
