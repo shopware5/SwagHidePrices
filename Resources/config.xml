@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.5/engine/Shopware/Components/Plugin/schema/config.xsd">
+
+    <elements>
+
+        <element type="select" scope="shop">
+            <name>show_prices</name>
+            <label lang="de">Preise anzeigen</label>
+            <label lang="en">Show Prices</label>
+            <value>1</value>
+            <description lang="de">
+                <![CDATA[
+                    Diese Option wirkt global: <br><i>Ja</i> - Preise immer anzeigen (unabhängig von Kundengruppen)<br><i>Nein</i> - Preise immer verbergen (unabhängig von Kundengruppen)<br><i>Nur für Kundengruppen, die im unteren Feld defniert werden</i> - Preise werden angezeigt oder verborgen abhängig von den genannten Kundengruppen.
+                ]]>
+            </description>
+
+            <description lang="en">
+                <![CDATA[
+                    This Option has global effect: <br><i>Yes</i> - Always show prices (independent of customer groups)<br><i>No</i> - Always hide prices (independent of customer groups)<br><i>Only for customer group defined in the lower field</i> - Prices get shown or hidden depending on specified customer groups.
+                ]]>
+            </description>
+            <store>
+                <option>
+                    <value>0</value>
+                    <label lang="de">Nein</label>
+                    <label lang="en">No</label>
+                </option>
+                <option>
+                    <value>1</value>
+                    <label lang="de">Ja</label>
+                    <label lang="en">Yes</label>
+                </option>
+                <option>
+                    <value>2</value>
+                    <label lang="de">Nur für Kundengruppen, die im unteren Feld definiert werden</label>
+                    <label lang="en">Only for customer group defined in the lower field</label>
+                </option>
+            </store>
+        </element>
+
+        <element scope="shop" type="select">
+            <name>show_group</name>
+            <label lang="de">Preisanzeige nur für Kundengruppe</label>
+            <label lang="en">Show Prices only for customer groups</label>
+            <description lang="de">
+                <![CDATA[
+                    Diese Einstellung wirkt nur dann, wenn im oberen Feld <i>Nur für Kundengruppen, die im unteren Feld defniert werden</i> ausgewählt ist.
+                ]]>
+            </description>
+            <description lang="en">
+                <![CDATA[
+                    This option only has an effect if <i>Only for customer group defined in the lower field</i> is selected in the upper field.
+                ]]>
+            </description>
+            <store><![CDATA[Ext.define('Swag.HidePrices.Form', {
+    extend: 'Ext.data.Store',
+    fields: [
+        { name:'id', type: 'int' },
+        { name:'name', type: 'string' }
+    ],
+    autoLoad: true,
+    pageSize: 25,
+    proxy: {
+        type: 'ajax',
+        url: window.location.href.substr(0, window.location.href.indexOf('backend')) + 'backend/SwagHidePrices/getCustomerGroups',
+        reader: {
+            type: 'json',
+            root: 'data',
+            totalProperty: 'total'
+        }
+    }
+    }).create();//new ]]>
+            </store>
+            <options>
+                <multiSelect>true</multiSelect>
+            </options>
+        </element>
+    </elements>
+</config>
