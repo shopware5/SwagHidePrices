@@ -23,30 +23,14 @@
 namespace SwagHidePrices;
 
 use Enlight_Controller_Action;
+use Enlight_Event_EventArgs;
 use Enlight_View_Default;
+use PDO;
 use Shopware\Components\Plugin;
-use Shopware\Components\Plugin\Context\ActivateContext;
-use Shopware\Components\Plugin\Context\DeactivateContext;
 use Shopware_Plugins_Core_HttpCache_Bootstrap;
 
 class SwagHidePrices extends Plugin
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function activate(ActivateContext $context)
-    {
-        $context->scheduleClearCache(ActivateContext::CACHE_LIST_DEFAULT);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deactivate(DeactivateContext $context)
-    {
-        $context->scheduleClearCache(DeactivateContext::CACHE_LIST_DEFAULT);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -60,12 +44,12 @@ class SwagHidePrices extends Plugin
     }
 
     /**
-     * @param \Enlight_Event_EventArgs $args
+     * @param Enlight_Event_EventArgs $args
      */
-    public function hidePrices(\Enlight_Event_EventArgs $args)
+    public function hidePrices(Enlight_Event_EventArgs $args)
     {
         /** @var Enlight_Controller_Action $subject */
-        $subject = $args->getSubject();
+        $subject = $args->get('subject');
 
         /** @var Enlight_View_Default $view */
         $view = $subject->View();
@@ -99,7 +83,7 @@ class SwagHidePrices extends Plugin
             ->where('name = "HttpCache"')
             ->setMaxResults(1)
             ->execute()
-            ->fetch(\PDO::FETCH_ASSOC);
+            ->fetch(PDO::FETCH_ASSOC);
 
         return $result['active'] === 1;
     }

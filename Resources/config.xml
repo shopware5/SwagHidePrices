@@ -3,7 +3,6 @@
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.5/engine/Shopware/Components/Plugin/schema/config.xsd">
 
     <elements>
-
         <element type="select" scope="shop">
             <name>show_prices</name>
             <label lang="de">Preise anzeigen</label>
@@ -11,7 +10,7 @@
             <value>1</value>
             <description lang="de">
                 <![CDATA[
-                    Diese Option wirkt global: <br><i>Ja</i> - Preise immer anzeigen (unabhängig von Kundengruppen)<br><i>Nein</i> - Preise immer verbergen (unabhängig von Kundengruppen)<br><i>Nur für Kundengruppen, die im unteren Feld defniert werden</i> - Preise werden angezeigt oder verborgen abhängig von den genannten Kundengruppen.
+                    Diese Option wirkt global: <br><i>Ja</i> - Preise immer anzeigen (unabhängig von Kundengruppen)<br><i>Nein</i> - Preise immer verbergen (unabhängig von Kundengruppen)<br><i>Nur für Kundengruppen, die im unteren Feld definiert werden</i> - Preise werden angezeigt oder verborgen abhängig von den genannten Kundengruppen.
                 ]]>
             </description>
 
@@ -45,7 +44,7 @@
             <label lang="en">Show Prices only for customer groups</label>
             <description lang="de">
                 <![CDATA[
-                    Diese Einstellung wirkt nur dann, wenn im oberen Feld <i>Nur für Kundengruppen, die im unteren Feld defniert werden</i> ausgewählt ist.
+                    Diese Einstellung wirkt nur dann, wenn im oberen Feld <i>Nur für Kundengruppen, die im unteren Feld definiert werden</i> ausgewählt ist.
                 ]]>
             </description>
             <description lang="en">

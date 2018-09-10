@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Shopware Plugins
  * Copyright (c) shopware AG
