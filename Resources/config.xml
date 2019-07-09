@@ -52,27 +52,11 @@
                     This option only has an effect if <i>Only for customer group defined in the lower field</i> is selected in the upper field.
                 ]]>
             </description>
-            <store><![CDATA[Ext.define('Swag.HidePrices.Form', {
-    extend: 'Ext.data.Store',
-    fields: [
-        { name:'id', type: 'int' },
-        { name:'name', type: 'string' }
-    ],
-    autoLoad: true,
-    pageSize: 25,
-    proxy: {
-        type: 'ajax',
-        url: window.location.href.substr(0, window.location.href.indexOf('backend')) + 'backend/SwagHidePrices/getCustomerGroups',
-        reader: {
-            type: 'json',
-            root: 'data',
-            totalProperty: 'total'
-        }
-    }
-    }).create();//new ]]>
-            </store>
+            <store>Shopware.apps.Base.store.CustomerGroup</store>
             <options>
                 <multiSelect>true</multiSelect>
+                <valueField>key</valueField>
+                <displayField>key</displayField>
             </options>
         </element>
     </elements>
