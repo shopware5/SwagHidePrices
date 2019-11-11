@@ -27,10 +27,25 @@ use Enlight_Event_EventArgs;
 use Enlight_View_Default;
 use PDO;
 use Shopware\Components\Plugin;
+use Shopware\Components\Plugin\Context\ActivateContext;
 use Shopware_Plugins_Core_HttpCache_Bootstrap;
 
 class SwagHidePrices extends Plugin
 {
+    public const NO_CACHE_CONTROLLERS_KEY = 'noCacheControllers';
+
+    public const DO_NOT_CACHE_PRICE_TAG = 'frontend/detail price';
+
+    public function install()
+    {
+        $this->installNoCacheTag();
+    }
+
+    public function activate(ActivateContext $context)
+    {
+        $context->scheduleClearCache(ActivateContext::CACHE_LIST_DEFAULT);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -117,5 +132,32 @@ class SwagHidePrices extends Plugin
         }
 
         return $showPrices;
+    }
+
+    private function installNoCacheTag(): void
+    {
+        $configWriter = $this->container->get('config_writer');
+        $configValue = $configWriter->get(self::NO_CACHE_CONTROLLERS_KEY);
+
+        $configValueArray = explode(PHP_EOL, $configValue);
+        if ($this->hasTag($configValueArray)) {
+            return;
+        }
+
+        $configValueArray[] = self::DO_NOT_CACHE_PRICE_TAG;
+        $configValue = implode(PHP_EOL, $configValueArray);
+
+        $configWriter->save(self::NO_CACHE_CONTROLLERS_KEY, $configValue);
+    }
+
+    private function hasTag(array $configValueArray): bool
+    {
+        foreach ($configValueArray as $value) {
+            if ($value === self::DO_NOT_CACHE_PRICE_TAG) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
