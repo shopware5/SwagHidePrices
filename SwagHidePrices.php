@@ -28,6 +28,7 @@ use Enlight_View_Default;
 use PDO;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\ActivateContext;
+use Shopware\Components\Plugin\Context\InstallContext;
 use Shopware_Plugins_Core_HttpCache_Bootstrap;
 
 class SwagHidePrices extends Plugin
@@ -36,7 +37,7 @@ class SwagHidePrices extends Plugin
 
     public const DO_NOT_CACHE_PRICE_TAG = 'frontend/detail price';
 
-    public function install()
+    public function install(InstallContext $context)
     {
         $this->installNoCacheTag();
     }
