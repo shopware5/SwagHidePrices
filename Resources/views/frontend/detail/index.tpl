@@ -9,6 +9,8 @@
 {block name='frontend_detail_data_price_default'}
     {if $ShowPrices}
         {$smarty.block.parent}
+    {else}
+        <meta itemprop="price" content="0">
     {/if}
 {/block}
 
