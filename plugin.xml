@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.5/engine/Shopware/Components/Plugin/schema/plugin.xsd">
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.6/engine/Shopware/Components/Plugin/schema/plugin.xsd">
 
     <label lang="de">Keine Preise ohne Login</label>
     <label lang="en">Hide prices if not logged in</label>
-    <version>2.1.3</version>
+    <version>2.1.4</version>
     <copyright>(c) by Shopware AG</copyright>
     <license>proprietary</license>
     <link>http://store.shopware.com</link>
     <author>Shopware AG</author>
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
+
+    <changelog version="2.1.4">
+        <changes lang="de">PT-11342 - Kompatibilität mit Google Structured Data verbessert;</changes>
+        <changes lang="en">PT-11342 - Improved compatibility with Google Structured Data;</changes>
+    </changelog>
 
     <changelog version="2.1.3">
         <changes lang="de">PT-11127 - Fehler während der Installation behoben;</changes>
