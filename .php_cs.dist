@@ -26,6 +26,8 @@ remain entirely with us.
 EOF;
 
 return PhpCsFixer\Config::create()
+    ->registerCustomFixers(new PhpCsFixerCustomFixers\Fixers())
+    ->setRiskyAllowed(true)
     ->setUsingCache(false)
     ->setRules([
         '@PSR2' => true,
@@ -41,6 +43,21 @@ return PhpCsFixer\Config::create()
         'concat_space' => ['spacing' => 'one'],
         'array_syntax' => ['syntax' => 'short'],
         'yoda_style' => ['equal' => false, 'identical' => false, 'less_and_greater' => false],
-    ])
-    ->setFinder($finder)
-;
+        'general_phpdoc_annotation_remove' => [
+            'annotations' => ['copyright', 'category'],
+        ],
+        'phpdoc_var_annotation_correct_order' => true,
+        'doctrine_annotation_indentation' => true,
+        'doctrine_annotation_spaces' => true,
+        'no_superfluous_phpdoc_tags' => true,
+        'php_unit_test_case_static_method_calls' => true,
+        'single_line_throw' => false,
+        'class_attributes_separation' => ['elements' => ['method', 'property']],
+        'native_constant_invocation' => true,
+        'native_function_invocation' => true,
+        PhpCsFixerCustomFixers\Fixer\NoSuperfluousConcatenationFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\SingleSpaceAfterStatementFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\SingleSpaceBeforeStatementFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\PhpdocParamTypeFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\OperatorLinebreakFixer::name() => ['only_booleans' => true],
+    ])->setFinder($finder);
