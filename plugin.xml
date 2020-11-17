@@ -11,6 +11,11 @@
     <author>Shopware AG</author>
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
 
+    <changelog version="REPLACE_GLOBAL_WITH_NEXT_VERSION">
+        <changes lang="de">PT-12118 - Shopware 5.7 und PHP8 Kompatibilität;</changes>
+        <changes lang="en">PT-12118 - Shopware 5.7 and PHP8 compatibility;</changes>
+    </changelog>
+
     <changelog version="2.1.4">
         <changes lang="de">PT-11342 - Kompatibilität mit Google Structured Data verbessert;</changes>
         <changes lang="en">PT-11342 - Improved compatibility with Google Structured Data;</changes>

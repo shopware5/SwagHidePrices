@@ -59,9 +59,6 @@ class SwagHidePrices extends Plugin
         ];
     }
 
-    /**
-     * @param Enlight_Event_EventArgs $args
-     */
     public function hidePrices(Enlight_Event_EventArgs $args)
     {
         /** @var Enlight_Controller_Action $subject */
@@ -88,10 +85,7 @@ class SwagHidePrices extends Plugin
         $view->assign('ShowPrices', $showPrices);
     }
 
-    /**
-     * @return bool
-     */
-    private function checkIfHttpCacheIsActive()
+    private function checkIfHttpCacheIsActive(): bool
     {
         $result = $this->container->get('dbal_connection')->createQueryBuilder()
             ->select('active')
@@ -104,14 +98,7 @@ class SwagHidePrices extends Plugin
         return $result['active'] === 1;
     }
 
-    /**
-     * @param $configShowPrices
-     * @param $config
-     * @param $userLoggedIn
-     *
-     * @return bool
-     */
-    private function showPrices($configShowPrices, $config, $userLoggedIn)
+    private function showPrices(int $configShowPrices, array $config, bool $userLoggedIn): bool
     {
         $showPrices = false;
 
@@ -127,7 +114,7 @@ class SwagHidePrices extends Plugin
             $userCustomerGroup = $this->container->get('system')->sUSERGROUP;
             $validCustomerGroups = $config['show_group'];
 
-            if ($userLoggedIn && in_array($userCustomerGroup, $validCustomerGroups)) {
+            if ($userLoggedIn && \in_array($userCustomerGroup, $validCustomerGroups)) {
                 $showPrices = true;
             }
         }
@@ -140,13 +127,13 @@ class SwagHidePrices extends Plugin
         $configWriter = $this->container->get('config_writer');
         $configValue = $configWriter->get(self::NO_CACHE_CONTROLLERS_KEY);
 
-        $configValueArray = explode(PHP_EOL, $configValue);
+        $configValueArray = \explode(\PHP_EOL, $configValue);
         if ($this->hasTag($configValueArray)) {
             return;
         }
 
         $configValueArray[] = self::DO_NOT_CACHE_PRICE_TAG;
-        $configValue = implode(PHP_EOL, $configValueArray);
+        $configValue = \implode(\PHP_EOL, $configValueArray);
 
         $configWriter->save(self::NO_CACHE_CONTROLLERS_KEY, $configValue);
     }
