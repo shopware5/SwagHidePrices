@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <defaults public="true"/>
+
+        <service id="SwagHidePrices\Services\DependencyProvider">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="SwagHidePrices\Services\HidePricesService">
+            <argument type="service" id="dbal_connection"/>
+            <argument type="service" id="SwagHidePrices\Services\DependencyProvider"/>
+            <argument>%swag_hide_prices.plugin_name%</argument>
+            <argument type="service" id="plugins"/>
+            <argument type="service" id="Shopware\Components\Plugin\Configuration\CachedReader" on-invalid="null"/>
+            <argument type="service" id="shopware.plugin.cached_config_reader" on-invalid="null"/>
+        </service>
+
+        <service id="SwagHidePrices\Subscriber\HidePricesSubscriber">
+            <argument type="service" id="SwagHidePrices\Services\HidePricesService"/>
+            <argument>%swag_hide_prices.plugin_dir%</argument>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+    </services>
+</container>
