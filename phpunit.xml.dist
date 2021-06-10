@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<phpunit bootstrap="./Tests/Bootstrap.php"
+         colors="true">
+    <testsuite name="SwagHidePrices-TestSuite">
+        <directory>Tests/</directory>
+    </testsuite>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./</directory>
+            <exclude>
+                <directory suffix=".php">./Tests</directory>
+                <directory suffix=".php">./vendor</directory>
+
+                <file>SwagHidePrices.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

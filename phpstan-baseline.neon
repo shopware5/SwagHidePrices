@@ -1,0 +1,132 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method SwagHidePrices\\\\Services\\\\DependencyProvider\\:\\:getSession\\(\\) should return Enlight_Components_Session_Namespace but returns object\\|null\\.$#"
+			count: 1
+			path: Services/DependencyProvider.php
+
+		-
+			message: "#^Method SwagHidePrices\\\\Services\\\\DependencyProvider\\:\\:getShop\\(\\) should return Shopware\\\\Models\\\\Shop\\\\Shop but returns object\\|null\\.$#"
+			count: 1
+			path: Services/DependencyProvider.php
+
+		-
+			message: "#^Cannot access property \\$sUSERGROUP on object\\|null\\.$#"
+			count: 1
+			path: Services/DependencyProvider.php
+
+		-
+			message: "#^Call to an undefined method Enlight_Plugin_PluginCollection\\:\\:Core\\(\\)\\.$#"
+			count: 1
+			path: Services/HidePricesService.php
+
+		-
+			message: "#^Cannot call method getByPluginName\\(\\) on Shopware\\\\Components\\\\Plugin\\\\CachedConfigReader\\|Shopware\\\\Components\\\\Plugin\\\\Configuration\\\\CachedReader\\|null\\.$#"
+			count: 2
+			path: Services/HidePricesService.php
+
+		-
+			message: "#^Cannot call method get\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: SwagHidePrices.php
+
+		-
+			message: "#^Cannot call method save\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: SwagHidePrices.php
+
+		-
+			message: "#^Cannot call method Core\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: Tests/Bootstrap.php
+
+		-
+			message: "#^Cannot call method getRepository\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: Tests/Bootstrap.php
+
+		-
+			message: "#^Cannot call method registerResources\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: Tests/Bootstrap.php
+
+		-
+			message: "#^Cannot call method fetchColumn\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: Tests/Bootstrap.php
+
+		-
+			message: "#^Cannot call method exec\\(\\) on object\\|null\\.$#"
+			count: 2
+			path: Tests/Functional/Services/HidePricesServiceTest.php
+
+		-
+			message: "#^Cannot call method offsetSet\\(\\) on object\\|null\\.$#"
+			count: 9
+			path: Tests/Functional/Services/HidePricesServiceTest.php
+
+		-
+			message: "#^Cannot call method offsetUnset\\(\\) on object\\|null\\.$#"
+			count: 9
+			path: Tests/Functional/Services/HidePricesServiceTest.php
+
+		-
+			message: "#^Cannot call method Core\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: Tests/Functional/Services/HidePricesServiceTest.php
+
+		-
+			message: "#^Method SwagHidePrices\\\\Tests\\\\Functional\\\\Services\\\\HidePricesServiceTest\\:\\:getService\\(\\) should return SwagHidePrices\\\\Services\\\\HidePricesServiceInterface but returns object\\|null\\.$#"
+			count: 1
+			path: Tests/Functional/Services/HidePricesServiceTest.php
+
+		-
+			message: "#^Cannot call method executeQuery\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: Tests/Functional/Services/HidePricesServiceTest.php
+
+		-
+			message: "#^Cannot access property \\$sUSERGROUP on object\\|null\\.$#"
+			count: 1
+			path: Tests/Functional/Services/HidePricesServiceTest.php
+
+		-
+			message: "#^Cannot call method Admin\\(\\) on Shopware_Components_Modules\\|null\\.$#"
+			count: 2
+			path: Tests/Functional/Services/HidePricesServiceTest.php
+
+		-
+			message: "#^Cannot call method exec\\(\\) on object\\|null\\.$#"
+			count: 2
+			path: Tests/Functional/Subscriber/HidePricesSubscriberTest.php
+
+		-
+			message: "#^Method SwagHidePrices\\\\Tests\\\\Functional\\\\Services\\\\HidePricesSubscriberTest\\:\\:getSubscriber\\(\\) should return SwagHidePrices\\\\Subscriber\\\\HidePricesSubscriber but returns object\\|null\\.$#"
+			count: 1
+			path: Tests/Functional/Subscriber/HidePricesSubscriberTest.php
+
+		-
+			message: "#^Cannot call method offsetSet\\(\\) on object\\|null\\.$#"
+			count: 8
+			path: Tests/Functional/Subscriber/HidePricesSubscriberTest.php
+
+		-
+			message: "#^Cannot call method executeQuery\\(\\) on object\\|null\\.$#"
+			count: 1
+			path: Tests/Functional/Subscriber/HidePricesSubscriberTest.php
+
+		-
+			message: "#^Cannot access property \\$sUSERGROUP on object\\|null\\.$#"
+			count: 1
+			path: Tests/Functional/Subscriber/HidePricesSubscriberTest.php
+
+		-
+			message: "#^Cannot call method Admin\\(\\) on Shopware_Components_Modules\\|null\\.$#"
+			count: 2
+			path: Tests/Functional/Subscriber/HidePricesSubscriberTest.php
+
+		-
+			message: "#^Cannot call method offsetUnset\\(\\) on object\\|null\\.$#"
+			count: 8
+			path: Tests/Functional/Subscriber/HidePricesSubscriberTest.php
+
