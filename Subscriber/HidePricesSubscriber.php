@@ -52,7 +52,7 @@ class HidePricesSubscriber implements SubscriberInterface
         ];
     }
 
-    public function hidePrices(\Enlight_Event_EventArgs $args)
+    public function hidePrices(\Enlight_Event_EventArgs $args): void
     {
         /** @var \Enlight_Controller_Action $subject */
         $subject = $args->get('subject');

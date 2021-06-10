@@ -48,7 +48,7 @@ class HidePricesService implements HidePricesServiceInterface
     private $isLegacyConfigReader;
 
     /**
-     * @var CachedReader|CachedConfigReader
+     * @var CachedReader|CachedConfigReader|null
      */
     private $configReader;
 
@@ -99,7 +99,7 @@ class HidePricesService implements HidePricesServiceInterface
         return $this->showPrices($showPricesLevel, $customerGroups, $isUserLoggedIn);
     }
 
-    private function setConfigReader(?CachedReader $cachedReader, ?CachedConfigReader $legacyConfigReader)
+    private function setConfigReader(?CachedReader $cachedReader, ?CachedConfigReader $legacyConfigReader): void
     {
         if ($cachedReader !== null) {
             $this->configReader = $cachedReader;
@@ -138,7 +138,11 @@ class HidePricesService implements HidePricesServiceInterface
         $httpCache = $this->plugins->Core()->get(self::HTTP_CACHE_PLUGIN_NAME);
         $httpCacheIsActive = (bool) $httpCache->Info()->get('active');
 
-        if ($httpCache !== null && $showPricesLevel === 2 && $userLoggedIn && $httpCacheIsActive) {
+        if ($httpCache !== null
+            && $showPricesLevel === self::PRICE_LEVEL_SHOW_FOR_VALID_CUSTOMER_GROUPS
+            && $userLoggedIn
+            && $httpCacheIsActive
+        ) {
             $httpCache->setNoCacheTag(self::PRICE_CACHE_TAG);
         }
     }

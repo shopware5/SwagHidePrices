@@ -33,9 +33,9 @@ class HidePricesSubscriberTest extends TestCase
     use UserLoginTrait;
     use DatabaseTransactionBehaviour;
 
-    public function testHidePricesShouldBeFalse()
+    public function testHidePricesShouldBeFalse(): void
     {
-        $sql = \file_get_contents(__DIR__ . '/_fixtures/plugin_config.sql');
+        $sql = \file_get_contents(__DIR__ . '/../_fixtures/plugin_config.sql');
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $controller = $this->getController();
@@ -48,9 +48,9 @@ class HidePricesSubscriberTest extends TestCase
         static::assertFalse($result);
     }
 
-    public function testHidePricesShouldBeTrue()
+    public function testHidePricesShouldBeTrue(): void
     {
-        $sql = \file_get_contents(__DIR__ . '/_fixtures/plugin_config.sql');
+        $sql = \file_get_contents(__DIR__ . '/../_fixtures/plugin_config.sql');
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $this->loginUser();

@@ -35,7 +35,7 @@ class HidePricesServiceTest extends TestCase
 
     public function testShouldShowPricesShouldBeFalse(): void
     {
-        $sql = \file_get_contents(__DIR__ . '/_fixtures/plugin_config.sql');
+        $sql = \file_get_contents(__DIR__ . '/../_fixtures/plugin_config.sql');
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $result = $this->getService()->shouldShowPrices();
@@ -45,7 +45,7 @@ class HidePricesServiceTest extends TestCase
 
     public function testShouldShowPricesShouldBeTrue(): void
     {
-        $sql = \file_get_contents(__DIR__ . '/_fixtures/plugin_config.sql');
+        $sql = \file_get_contents(__DIR__ . '/../_fixtures/plugin_config.sql');
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $this->loginUser();

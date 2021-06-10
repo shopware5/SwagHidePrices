@@ -32,12 +32,12 @@ class SwagHidePrices extends Plugin
 
     public const DO_NOT_CACHE_PRICE_TAG = 'frontend/detail price';
 
-    public function install(InstallContext $context)
+    public function install(InstallContext $context): void
     {
         $this->installNoCacheTag();
     }
 
-    public function activate(ActivateContext $context)
+    public function activate(ActivateContext $context): void
     {
         $context->scheduleClearCache(ActivateContext::CACHE_LIST_DEFAULT);
     }

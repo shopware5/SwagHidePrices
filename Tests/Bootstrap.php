@@ -34,7 +34,7 @@ $enlightLoader->registerNamespace(
 
 class SwagHidePricesTestKernel extends Kernel
 {
-    public static function start()
+    public static function start(): void
     {
         $kernel = new self((string) \getenv('SHOPWARE_ENV') ?: 'testing', true);
         $kernel->boot();
@@ -56,12 +56,7 @@ class SwagHidePricesTestKernel extends Kernel
         }
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    private static function assertPlugin($name)
+    private static function assertPlugin(string $name): bool
     {
         $sql = 'SELECT 1 FROM s_core_plugins WHERE name = ? AND active = 1';
 
