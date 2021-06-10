@@ -12,8 +12,14 @@
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
 
     <changelog version="REPLACE_GLOBAL_WITH_NEXT_VERSION">
-        <changes lang="de">PT-10290 - Handling der Kundengruppen verbessert;</changes>
-        <changes lang="en">PT-10290 - Improved handling of customer groups;</changes>
+        <changes lang="de">
+            PT-10290 - Handling der Kundengruppen verbessert;
+            PT-12135 - Kompatibilität mit SwagBundle verbessert;
+        </changes>
+        <changes lang="en">
+            PT-10290 - Improved handling of customer groups;
+            PT-12135 - Improved compatibility with SwagBundle;
+        </changes>
     </changelog>
 
     <changelog version="2.1.5">
