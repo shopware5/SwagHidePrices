@@ -31,3 +31,23 @@
         {$smarty.block.parent}
     {/if}
 {/block}
+
+{block name='panel_content_header_price'}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {/if}
+{/block}
+
+{block name='bundle_article_price_supplier'}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {/if}
+{/block}
+
+{block name='bundle_article_reference_price_unit_reference_content'}
+    {if $ShowPrices}
+        {$smarty.block.parent}
+    {else}
+        <span class="bundle--product-content-description is--bold">&nbsp;</span> <span class="bundle--purchaseUnit-{$product.bundleArticleId}"></span> <span class="bundle--purchaseDescription-{$product.bundleArticleId}">&nbsp;</span><span class="bundle--reference-price-{$product.bundleArticleId}">&nbsp;</span>
+    {/if}
+{/block}
