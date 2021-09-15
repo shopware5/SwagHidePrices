@@ -28,27 +28,25 @@ use Shopware\Components\Plugin\Configuration\CachedReader;
 
 class HidePricesService implements HidePricesServiceInterface
 {
-    const SHOW_PRICES_LEVEL_CONFIG_KEY = 'show_prices';
+    public const SHOW_PRICES_LEVEL_CONFIG_KEY = 'show_prices';
 
-    const CUSTOMER_GROUPS_CONFIG_KEY = 'show_group';
-
-    const HTTP_CACHE_PLUGIN_NAME = 'HttpCache';
-
-    const PRICE_CACHE_TAG = 'price';
-
-    const PRICE_LEVEL_HIDE_PRICES = 0;
-
-    const PRICE_LEVEL_SHOW_PRICES = 1;
-
-    const PRICE_LEVEL_SHOW_FOR_VALID_CUSTOMER_GROUPS = 2;
+    public const CUSTOMER_GROUPS_CONFIG_KEY = 'show_group';
 
     /**
-     * @var bool
+     * @deprecated - Will be removed in 3.0.0 without replacement
      */
-    private $isLegacyConfigReader;
+    public const HTTP_CACHE_PLUGIN_NAME = 'HttpCache';
+
+    public const PRICE_CACHE_TAG = 'price';
+
+    public const PRICE_LEVEL_HIDE_PRICES = 0;
+
+    public const PRICE_LEVEL_SHOW_PRICES = 1;
+
+    public const PRICE_LEVEL_SHOW_FOR_VALID_CUSTOMER_GROUPS = 2;
 
     /**
-     * @var CachedReader|CachedConfigReader|null
+     * @var CachedReader|CachedConfigReader
      */
     private $configReader;
 
@@ -103,15 +101,20 @@ class HidePricesService implements HidePricesServiceInterface
     {
         if ($cachedReader !== null) {
             $this->configReader = $cachedReader;
-            $this->isLegacyConfigReader = false;
 
             return;
         }
 
+        if ($legacyConfigReader === null) {
+            throw new \RuntimeException('No config reader given');
+        }
+
         $this->configReader = $legacyConfigReader;
-        $this->isLegacyConfigReader = true;
     }
 
+    /**
+     * @param string[] $validCustomerGroups
+     */
     private function showPrices(int $showPricesLevel, array $validCustomerGroups, bool $userLoggedIn): bool
     {
         if ($showPricesLevel === self::PRICE_LEVEL_HIDE_PRICES) {
@@ -135,11 +138,10 @@ class HidePricesService implements HidePricesServiceInterface
 
     private function setPriceNoCacheTag(int $showPricesLevel, bool $userLoggedIn): void
     {
-        $httpCache = $this->plugins->Core()->get(self::HTTP_CACHE_PLUGIN_NAME);
+        $httpCache = $this->plugins->Core()->HttpCache();
         $httpCacheIsActive = (bool) $httpCache->Info()->get('active');
 
-        if ($httpCache !== null
-            && $showPricesLevel === self::PRICE_LEVEL_SHOW_FOR_VALID_CUSTOMER_GROUPS
+        if ($showPricesLevel === self::PRICE_LEVEL_SHOW_FOR_VALID_CUSTOMER_GROUPS
             && $userLoggedIn
             && $httpCacheIsActive
         ) {
@@ -147,9 +149,12 @@ class HidePricesService implements HidePricesServiceInterface
         }
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getPluginConfig(): array
     {
-        if ($this->isLegacyConfigReader) {
+        if ($this->configReader instanceof CachedConfigReader) {
             return $this->configReader->getByPluginName($this->pluginName, $this->dependencyProvider->getShop());
         }
 
@@ -161,9 +166,18 @@ class HidePricesService implements HidePricesServiceInterface
         return (bool) $this->dependencyProvider->getSession()->offsetGet('sUserId');
     }
 
+    /**
+     * @param array<string, mixed> $config
+     *
+     * @return string[]
+     */
     private function getValidCustomerGroups(array $config): array
     {
         $validCustomerGroups = $config[self::CUSTOMER_GROUPS_CONFIG_KEY];
+
+        if ($validCustomerGroups === null) {
+            return [];
+        }
 
         if (!\is_array($validCustomerGroups)) {
             $validCustomerGroups = $this->normalizeCustomerGroups($validCustomerGroups);
@@ -176,6 +190,9 @@ class HidePricesService implements HidePricesServiceInterface
         return $validCustomerGroups;
     }
 
+    /**
+     * @return string[]
+     */
     private function normalizeCustomerGroups(string $customerGroups): array
     {
         return \array_map('trim', \explode(',', $customerGroups));

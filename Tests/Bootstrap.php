@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Shopware Plugins
  * Copyright (c) shopware AG
@@ -21,6 +23,7 @@
  */
 
 use Shopware\Kernel;
+use Shopware\Models\Shop\Repository;
 use Shopware\Models\Shop\Shop;
 
 require_once __DIR__ . '/../../../../autoload.php';
@@ -36,13 +39,13 @@ class SwagHidePricesTestKernel extends Kernel
 {
     public static function start(): void
     {
-        $kernel = new self((string) \getenv('SHOPWARE_ENV') ?: 'testing', true);
+        $kernel = new self((string) getenv('SHOPWARE_ENV') ?: 'testing', true);
         $kernel->boot();
 
         $container = $kernel->getContainer();
         $container->get('plugins')->Core()->ErrorHandler()->registerErrorHandler(\E_ALL | \E_STRICT);
 
-        /** @var \Shopware\Models\Shop\Repository $repository */
+        /** @var Repository $repository */
         $repository = $container->get('models')->getRepository(Shop::class);
 
         $shop = $repository->getActiveDefault();
@@ -51,16 +54,16 @@ class SwagHidePricesTestKernel extends Kernel
 
         $_SERVER['HTTP_HOST'] = $shop->getHost();
 
-        if (!self::assertPlugin('SwagHidePrices')) {
-            throw new \Exception('Plugin SwagHidePrices is not installed or activated.');
+        if (!self::assertPlugin()) {
+            throw new Exception('Plugin SwagHidePrices is not installed or activated.');
         }
     }
 
-    private static function assertPlugin(string $name): bool
+    private static function assertPlugin(): bool
     {
         $sql = 'SELECT 1 FROM s_core_plugins WHERE name = ? AND active = 1';
 
-        return (bool) Shopware()->Container()->get('dbal_connection')->fetchColumn($sql, [$name]);
+        return (bool) Shopware()->Container()->get('dbal_connection')->fetchColumn($sql, ['SwagHidePrices']);
     }
 }
 

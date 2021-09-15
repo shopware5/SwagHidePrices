@@ -58,6 +58,9 @@ class SwagHidePrices extends Plugin
         $configWriter->save(self::NO_CACHE_CONTROLLERS_KEY, $configValue);
     }
 
+    /**
+     * @param string[] $configValueArray
+     */
     private function hasTag(array $configValueArray): bool
     {
         foreach ($configValueArray as $value) {
