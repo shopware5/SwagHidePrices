@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Shopware Plugins
  * Copyright (c) shopware AG
@@ -20,7 +21,7 @@
  * remain entirely with us.
  */
 
-namespace SwagHidePrices\Tests\Functional\Services;
+namespace SwagHidePrices\Tests\Functional\Subscriber;
 
 use PHPUnit\Framework\TestCase;
 use Shopware\Tests\Functional\Traits\DatabaseTransactionBehaviour;
@@ -36,6 +37,7 @@ class HidePricesSubscriberTest extends TestCase
     public function testHidePricesShouldBeFalse(): void
     {
         $sql = \file_get_contents(__DIR__ . '/../_fixtures/plugin_config.sql');
+        static::assertIsString($sql);
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $controller = $this->getController();
@@ -51,6 +53,7 @@ class HidePricesSubscriberTest extends TestCase
     public function testHidePricesShouldBeTrue(): void
     {
         $sql = \file_get_contents(__DIR__ . '/../_fixtures/plugin_config.sql');
+        static::assertIsString($sql);
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $this->loginUser();

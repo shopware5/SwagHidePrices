@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Shopware Plugins
  * Copyright (c) shopware AG
@@ -36,6 +37,7 @@ class HidePricesServiceTest extends TestCase
     public function testShouldShowPricesShouldBeFalse(): void
     {
         $sql = \file_get_contents(__DIR__ . '/../_fixtures/plugin_config.sql');
+        static::assertIsString($sql);
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $result = $this->getService()->shouldShowPrices();
@@ -46,6 +48,7 @@ class HidePricesServiceTest extends TestCase
     public function testShouldShowPricesShouldBeTrue(): void
     {
         $sql = \file_get_contents(__DIR__ . '/../_fixtures/plugin_config.sql');
+        static::assertIsString($sql);
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $this->loginUser();
@@ -59,6 +62,8 @@ class HidePricesServiceTest extends TestCase
 
     /**
      * @dataProvider showPricesTestDataProvider
+     *
+     * @param string[] $validCustomerGroups
      */
     public function testShowPrices(int $showPricesLevel, array $validCustomerGroups, bool $userLoggedIn, bool $expectedResult): void
     {
@@ -70,6 +75,9 @@ class HidePricesServiceTest extends TestCase
         static::assertSame($expectedResult, $result);
     }
 
+    /**
+     * @return array<array<int|string[]|bool>>
+     */
     public function showPricesTestDataProvider(): array
     {
         return [
@@ -110,6 +118,9 @@ class HidePricesServiceTest extends TestCase
 
     /**
      * @dataProvider getValidCustomerGroupsTestDataProvider
+     *
+     * @param array<string, string|string[]|null> $config
+     * @param string[]                            $expectedResult
      */
     public function testGetValidCustomerGroups(array $config, array $expectedResult): void
     {
@@ -121,11 +132,15 @@ class HidePricesServiceTest extends TestCase
         static::assertSame($expectedResult, $result);
     }
 
+    /**
+     * @return array<array<array<int|string, string|string[]|null>>>
+     */
     public function getValidCustomerGroupsTestDataProvider(): array
     {
         return [
             [['show_group' => ''], ['']],
             [['show_group' => 'Any, Foo, Bar'], ['Any', 'Foo', 'Bar']],
+            [['show_group' => null], []],
             [['show_group' => []], []],
             [['show_group' => ['EK']], ['EK']],
             [['show_group' => ['H']], ['H']],
@@ -137,6 +152,8 @@ class HidePricesServiceTest extends TestCase
 
     /**
      * @dataProvider normalizeCustomerGroupsTestDataProvider
+     *
+     * @param string[] $expectedResult
      */
     public function testNormalizeCustomerGroups(string $customerGroupString, array $expectedResult): void
     {
@@ -148,6 +165,9 @@ class HidePricesServiceTest extends TestCase
         static::assertSame($expectedResult, $result);
     }
 
+    /**
+     * @return array<array<string|string[]>>
+     */
     public function normalizeCustomerGroupsTestDataProvider(): array
     {
         return [
@@ -172,6 +192,9 @@ class HidePricesServiceTest extends TestCase
         static::assertSame($expectedResult, $result);
     }
 
+    /**
+     * @return array<array<string|bool>>
+     */
     public function isValidCustomerGroupTestDataProvider(): array
     {
         return [
@@ -180,11 +203,6 @@ class HidePricesServiceTest extends TestCase
             ['ANY', false],
             ['', false],
         ];
-    }
-
-    private function getHttpCachePlugin(): \Shopware_Plugins_Core_HttpCache_Bootstrap
-    {
-        return Shopware()->Container()->get('plugins')->Core()->get('HttpCache');
     }
 
     private function getService(): HidePricesServiceInterface

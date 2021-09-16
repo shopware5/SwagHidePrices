@@ -44,11 +44,16 @@ class DependencyProvider implements DependencyProviderInterface
 
     public function getShop(): Shop
     {
-        return $this->container->get('shop');
+        $shop = $this->container->get('shop');
+        if (!$shop instanceof Shop) {
+            throw new \RuntimeException('Shop not set in DI container');
+        }
+
+        return $shop;
     }
 
     public function getCurrentUserUserGroup(): string
     {
-        return $this->container->get('system')->sUSERGROUP;
+        return $this->container->get('modules')->System()->sUSERGROUP;
     }
 }

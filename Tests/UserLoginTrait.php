@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Shopware Plugins
  * Copyright (c) shopware AG
@@ -52,7 +53,7 @@ trait UserLoginTrait
             ]
         );
 
-        Shopware()->Container()->get('system')->sUSERGROUP = $userGroup;
+        Shopware()->Modules()->System()->sUSERGROUP = $userGroup;
 
         return Shopware()->Modules()->Admin()->sCheckUser();
     }

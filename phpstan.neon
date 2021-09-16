@@ -1,10 +1,15 @@
-includes:
-    - phpstan-baseline.neon
-
 parameters:
     level: 8
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+    symfony:
+        constant_hassers: false
+        container_xml_path: '../../../var/cache/production____REVISION___/container.xml'
+        console_application_loader: ../../../tests/phpstan-console-application.php
     excludes_analyse:
         - .githooks
         - vendor
+    ignoreErrors:
+        # Some day this should be specified. Is also ignored in the core
+        - '#no value type specified in iterable type Enlight_Plugin_PluginCollection.#'
+        - '#no value type specified in iterable type Enlight_Event_EventArgs.#'
+        # Somehow the Symfony PHPStan extension could not detect the lazy service "shop" correctly
+        - '#Service "shop" is not registered in the container#'
