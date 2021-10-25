@@ -66,7 +66,7 @@ class HidePricesService implements HidePricesServiceInterface
     private $pluginName;
 
     /**
-     * @var \Enlight_Plugin_PluginCollection
+     * @var \Enlight_Plugin_PluginManager
      */
     private $plugins;
 
@@ -74,7 +74,7 @@ class HidePricesService implements HidePricesServiceInterface
         Connection $connection,
         DependencyProviderInterface $dependencyProvider,
         string $pluginName,
-        \Enlight_Plugin_PluginCollection $plugins,
+        \Enlight_Plugin_PluginManager $plugins,
         ?CachedReader $cachedReader,
         ?CachedConfigReader $legacyConfigReader
     ) {

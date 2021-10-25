@@ -9,7 +9,7 @@ parameters:
         - vendor
     ignoreErrors:
         # Some day this should be specified. Is also ignored in the core
-        - '#no value type specified in iterable type Enlight_Plugin_PluginCollection.#'
+        - '#no value type specified in iterable type Enlight_Plugin_PluginManager.#'
         - '#no value type specified in iterable type Enlight_Event_EventArgs.#'
         # Somehow the Symfony PHPStan extension could not detect the lazy service "shop" correctly
         - '#Service "shop" is not registered in the container#'
