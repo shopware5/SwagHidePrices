@@ -27,11 +27,11 @@ use PHPUnit\Framework\TestCase;
 use Shopware\Tests\Functional\Traits\DatabaseTransactionBehaviour;
 use SwagHidePrices\Services\HidePricesService;
 use SwagHidePrices\Services\HidePricesServiceInterface;
-use SwagHidePrices\Tests\UserLoginTrait;
+use SwagHidePrices\Tests\CustomerLoginTrait;
 
 class HidePricesServiceTest extends TestCase
 {
-    use UserLoginTrait;
+    use CustomerLoginTrait;
     use DatabaseTransactionBehaviour;
 
     public function testShouldShowPricesShouldBeFalse(): void
@@ -51,11 +51,11 @@ class HidePricesServiceTest extends TestCase
         static::assertIsString($sql);
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
-        $this->loginUser();
+        $this->loginCustomer();
 
         $result = $this->getService()->shouldShowPrices();
 
-        $this->logOutUser();
+        $this->logoutCustomer();
 
         static::assertTrue($result);
     }

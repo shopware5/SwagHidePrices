@@ -26,12 +26,12 @@ namespace SwagHidePrices\Tests\Functional\Subscriber;
 use PHPUnit\Framework\TestCase;
 use Shopware\Tests\Functional\Traits\DatabaseTransactionBehaviour;
 use SwagHidePrices\Subscriber\HidePricesSubscriber;
+use SwagHidePrices\Tests\CustomerLoginTrait;
 use SwagHidePrices\Tests\Functional\Mocks\ControllerMock;
-use SwagHidePrices\Tests\UserLoginTrait;
 
 class HidePricesSubscriberTest extends TestCase
 {
-    use UserLoginTrait;
+    use CustomerLoginTrait;
     use DatabaseTransactionBehaviour;
 
     public function testHidePricesShouldBeFalse(): void
@@ -56,7 +56,7 @@ class HidePricesSubscriberTest extends TestCase
         static::assertIsString($sql);
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
-        $this->loginUser();
+        $this->loginCustomer();
 
         $controller = $this->getController();
         $eventArgs = new \Enlight_Event_EventArgs(['subject' => $controller]);
@@ -65,7 +65,7 @@ class HidePricesSubscriberTest extends TestCase
 
         $result = $controller->View()->getAssign('ShowPrices');
 
-        $this->logOutUser();
+        $this->logoutCustomer();
 
         static::assertTrue($result);
     }

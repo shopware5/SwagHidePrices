@@ -23,53 +23,65 @@ declare(strict_types=1);
 
 namespace SwagHidePrices\Tests;
 
-trait UserLoginTrait
+trait CustomerLoginTrait
 {
-    public function loginUser(
+    public function loginCustomer(
         string $sessionId = 'phpUnitTestSession',
-        int $userId = 1,
-        string $email = 'test@example.com',
+        int $customerId = 1,
         string $password = 'a256a310bc1e5db755fd392c524028a8',
-        string $userGroup = 'EK',
+        ?string $passwordChangeDate = null,
+        string $email = 'test@example.com',
         int $countryId = 2,
         int $areaId = 3,
-        int $stateId = null
-    ): bool {
+        ?int $stateId = null,
+        string $customerGroupKey = 'EK'
+    ): void {
+        Shopware()->Container()->reset('modules');
         $session = Shopware()->Container()->get('session');
+
+        if ($passwordChangeDate === null) {
+            $passwordChangeDate = Shopware()->Container()->get('dbal_connection')->fetchColumn(
+                'SELECT `password_change_date` FROM `s_user` WHERE `id` = :customerId;',
+                [
+                    'customerId' => $customerId,
+                ]
+            );
+        }
+
         $session->offsetSet('sessionId', $sessionId);
-        $session->offsetSet('sUserId', $userId);
+        $session->offsetSet('sUserId', $customerId);
         $session->offsetSet('sUserMail', $email);
         $session->offsetSet('sUserPassword', $password);
-        $session->offsetSet('sUserGroup', $userGroup);
+        $session->offsetSet('sUserPasswordChangeDate', $passwordChangeDate);
         $session->offsetSet('sCountry', $countryId);
         $session->offsetSet('sArea', $areaId);
+        $session->offsetSet('sUserGroup', $customerGroupKey);
         $session->offsetSet('sState', $stateId);
 
         Shopware()->Container()->get('dbal_connection')->executeQuery(
-            'UPDATE s_user SET sessionID = :sessionId, lastlogin = now() WHERE id=:userId',
+            'UPDATE s_user SET sessionID = :sessionId, lastlogin = now() WHERE id=:customerId',
             [
                 ':sessionId' => $sessionId,
-                ':userId' => $userId,
+                ':customerId' => $customerId,
             ]
         );
 
-        Shopware()->Modules()->System()->sUSERGROUP = $userGroup;
-
-        return Shopware()->Modules()->Admin()->sCheckUser();
+        static::assertTrue(Shopware()->Modules()->Admin()->sCheckUser());
     }
 
-    public function logOutUser(): bool
+    public function logoutCustomer(): void
     {
         $session = Shopware()->Container()->get('session');
         $session->offsetUnset('sessionId');
         $session->offsetUnset('sUserId');
         $session->offsetUnset('sUserMail');
         $session->offsetUnset('sUserPassword');
+        $session->offsetUnset('sUserPasswordChangeDate');
         $session->offsetUnset('sUserGroup');
         $session->offsetUnset('sCountry');
         $session->offsetUnset('sArea');
         $session->offsetUnset('sState');
 
-        return !Shopware()->Modules()->Admin()->sCheckUser();
+        static::assertFalse(Shopware()->Modules()->Admin()->sCheckUser());
     }
 }
