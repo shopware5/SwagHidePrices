@@ -54,6 +54,9 @@ class DependencyProvider implements DependencyProviderInterface
 
     public function getCurrentUserUserGroup(): string
     {
-        return $this->container->get('modules')->System()->sUSERGROUP;
+        /** @var \Shopware_Components_Modules $modules */
+        $modules = $this->container->get('modules');
+
+        return $modules->System()->sUSERGROUP;
     }
 }
